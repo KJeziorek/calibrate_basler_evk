@@ -1,0 +1,14 @@
+events/*
+images/*
+calibration
+reconstruction
+pretrained/*
+
+__pycache__/*
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pywz
+
