@@ -44,8 +44,8 @@ def main(args):
 
             img1 = cv2.drawChessboardCorners(img1, pattern_size, corners1, ret1)
             img2 = cv2.drawChessboardCorners(img2, pattern_size, corners2, ret2)
-            cv2.imshow('Chessboard Corners - Camera 1', img1)
-            cv2.imshow('Chessboard Corners - Camera 2', img2)
+            conc = cv2.hconcat([img1, img2])
+            cv2.imshow('Chessboard Corners', conc)
             cv2.waitKey(1)
 
     cv2.destroyAllWindows()

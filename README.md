@@ -6,7 +6,7 @@ This code presents a pipeline for calibrating the Basler and Event Camera. The p
 2. Calibrating both cameras using OpenCV
 3. Visualizing the results
 
-The code is based on the E2VID method, which is a method for reconstructing event camera data to grayscale images. 
+The code is based on the E2VID method, which is a recurrent network for reconstructing event camera data to grayscale images. 
 
 <p align="center">
   <img src="assets/calibrated.gif">
