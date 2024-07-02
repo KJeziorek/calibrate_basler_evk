@@ -38,7 +38,6 @@ Then, clone this repository and download the pretrained model for the E2VID algo
 git clone ...
 wget "http://rpg.ifi.uzh.ch/data/E2VID/models/E2VID_lightweight.pth.tar" -O pretrained/E2VID_lightweight.pth.tar
 ```
-Number of samples determines how many samples are used for calibration. The more samples, the better the calibration, however, the calibration process will take longer.
 
 # Run
 
@@ -52,7 +51,7 @@ export HDF5_PLUGIN_PATH=$HDF5_PLUGIN_PATH:/usr/lib/x86_64-linux-gnu/hdf5/plugins
 Then you can run separate scripts for reconstructing the event camera data to grayscale images, calibrating both cameras and visualizing the results.
 
 ```bash
-python3 reconstruct.py -i events/output.hdf5 --num_samples 100
+python3 reconstruct.py -i events/output.hdf5 --num_samples 100 -T 20
 python3 calibrate.py --num_samples 100
 python3 reconstruct.py -i events/output.hdf5 --num_samples 100
 ```
@@ -62,6 +61,7 @@ or run the whole pipeline:
 ```bash
 bash run_all.sh
 ```
+Number of samples determines how many samples are used for calibration. The more samples, the better the calibration, however, the calibration process will take longer. T is the time window betwen triggers in ms.
 
 Note that the reading events from HDF5 file is slow, so you need to be patient.
 
