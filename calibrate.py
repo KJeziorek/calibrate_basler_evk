@@ -27,7 +27,13 @@ def main(args):
     images1.pop(0) # remove from images1 first image with name image_0.png because we don't have previous events
     images2.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0].split('_')[-1]))
 
-    for img1_path, img2_path in zip(images1[:args.num_samples], images2[:args.num_samples]):
+    # Select args.num_samples images from images1 and images2
+    vec = np.arange(0, len(images2))
+    random_indices = np.random.choice(vec, args.num_samples, replace=False)
+    images1_cal = [images1[i] for i in random_indices]
+    images2_cal = [images2[i] for i in random_indices]
+    
+    for img1_path, img2_path in zip(images1_cal, images2_cal):
         img1 = cv2.imread(img1_path)
         img1 = cv2.resize(img1, (1280, 720))
         img2 = cv2.imread(img2_path)
