@@ -1,5 +1,22 @@
 # Code for calibrating the Basler and Event Camera
 
+This code presents a pipeline for calibrating the Basler and Event Camera. The pipeline consists of the following steps:
+
+1. Reconstructing the event camera data to grayscale images
+2. Calibrating both cameras using OpenCV
+3. Visualizing the results
+
+The code is based on the E2VID method, which is a method for reconstructing event camera data to grayscale images. 
+
+<p align="center">
+  <img src="assets/calibrated.gif">
+</p>
+
+<p align="center">
+  <img src="assets/ev+gray.gif">
+</p>
+
+
 # Installation
 
 First, create a Conda environment:
@@ -15,12 +32,13 @@ conda install -y h5py blosc-hdf5-plugin -c conda-forge
 
 ```
 
-Then, clone this repository and download the pretrained model:
+Then, clone this repository and download the pretrained model for the E2VID algorithm:
 
 ```bash
 git clone ...
 wget "http://rpg.ifi.uzh.ch/data/E2VID/models/E2VID_lightweight.pth.tar" -O pretrained/E2VID_lightweight.pth.tar
 ```
+Number of samples determines how many samples are used for calibration. The more samples, the better the calibration, however, the calibration process will take longer.
 
 # Run
 
@@ -44,6 +62,8 @@ or run the whole pipeline:
 ```bash
 bash run_all.sh
 ```
+
+Note that the reading events from HDF5 file is slow, so you need to be patient.
 
 # Citation
 This code is mainly based on the following paper:
