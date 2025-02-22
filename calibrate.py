@@ -9,6 +9,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Calibrate basler camera with events camera')
     parser.add_argument('--pattern_size', default='10x7', type=str)
     parser.add_argument('--num_samples', default=50, type=int)
+    parser.add_argument('-i ', '--image_folder', required=True, type=str, help='Path to the images folder')
     return parser.parse_args()
 
 def main(args):
@@ -20,7 +21,7 @@ def main(args):
     objp = np.zeros((np.prod(pattern_size), 3), dtype=np.float32)
     objp[:, :2] = np.mgrid[0:pattern_size[0], 0:pattern_size[1]].T.reshape(-1, 2)
 
-    images1 = sorted(glob.glob('images/*.tif'))
+    images1 = sorted(glob.glob(f'{args.image_folder}/*.tif'))
     images2 = sorted(glob.glob('reconstruction/*.png'))
 
     images1.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0].split('_')[-1]))

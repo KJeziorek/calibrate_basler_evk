@@ -51,9 +51,9 @@ export HDF5_PLUGIN_PATH=$HDF5_PLUGIN_PATH:/usr/lib/x86_64-linux-gnu/hdf5/plugins
 Then you can run separate scripts for reconstructing the event camera data to grayscale images, calibrating both cameras and visualizing the results.
 
 ```bash
-python3 reconstruct.py -i events/output.hdf5 --num_samples 100 -T 20
+python3 reconstruct.py -e events/output.hdf5 --num_samples 100 -T 20
 python3 calibrate.py --num_samples 100
-python3 reconstruct.py -i events/output.hdf5 --num_samples 100
+python3 test.py -e events/output.hdf5 -i images -T 20
 ```
 
 or run the whole pipeline:

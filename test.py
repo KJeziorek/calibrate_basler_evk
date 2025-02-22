@@ -10,7 +10,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Calibrate Basler camera with events camera')
     parser.add_argument('-e', '--event_file', required=True, type=str, help='Path to the input event file')
     parser.add_argument('-i ', '--image_folder', required=True, type=str, help='Path to the images folder')
-    parser.add_argument('-d ', '--duration', default=20, type=int, help='Duration of each event window, in milliseconds')
+    parser.add_argument('-T ', '--duration', default=20, type=int, help='Duration of each event window, in milliseconds')
     return parser.parse_args()
 
 def main(args):
@@ -59,9 +59,9 @@ def main(args):
         
         img = cv2.undistort(img, K1, dist_coeffs1)
         ev_image = cv2.undistort(ev_image, K2, dist_coeffs2)
-        img = cv2.warpPerspective(img, H, (img.shape[1], img.shape[0]))
+        img_warp = cv2.warpPerspective(img, H, (img.shape[1], img.shape[0]))
         
-        img_concat = cv2.hconcat([img, ev_image])
+        img_concat = cv2.hconcat([img_warp, ev_image])
         cv2.imshow('Mapped Image and Event Image', img_concat)
         
         if cv2.waitKey(10) & 0xFF == ord('q'):

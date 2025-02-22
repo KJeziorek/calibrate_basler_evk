@@ -1,9 +1,17 @@
 events/*
 images/*
 images1
-calibration
+calibration/*
 reconstruction
 pretrained/*
+calibration_results
+Rondo1
+Sync-done-calibrated
+Statycznie1
+images2
+Rondo1.zip
+Statycznie1.zip
+Sync-done-calibrated.zip
 
 __pycache__/*
 *.pyc

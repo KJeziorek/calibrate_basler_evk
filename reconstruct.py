@@ -14,7 +14,8 @@ from options.inference_options import set_inference_options
 def parse_args():
     parser = argparse.ArgumentParser(
         description='Evaluating a trained network')
-    parser.add_argument('-i', '--input_file', required=True, type=str)
+    parser.add_argument('-e', '--event_file', required=True, type=str,
+                        help='Path to the input event file')
     parser.add_argument('--fixed_duration', dest='fixed_duration', action='store_true')
     parser.set_defaults(fixed_duration=True)
     parser.add_argument('-N', '--window_size', default=None, type=int,
@@ -42,7 +43,7 @@ def main(args):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     # Read events from hdf5 file
-    events, triggers, id, ts = read_events(args.input_file)
+    events, triggers, id, ts = read_events(args.event_file)
 
     # Get events between the first and last trigger
     t_start = np.searchsorted(events['t'], triggers['t'][args.skip_samples])
