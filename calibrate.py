@@ -7,7 +7,7 @@ import argparse
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Calibrate basler camera with events camera')
-    parser.add_argument('--pattern_size', default='7x5', type=str)
+    parser.add_argument('--pattern_size', default='10x7', type=str)
     parser.add_argument('--num_samples', default=50, type=int)
     return parser.parse_args()
 
@@ -20,7 +20,7 @@ def main(args):
     objp = np.zeros((np.prod(pattern_size), 3), dtype=np.float32)
     objp[:, :2] = np.mgrid[0:pattern_size[0], 0:pattern_size[1]].T.reshape(-1, 2)
 
-    images1 = sorted(glob.glob('images/*.png'))
+    images1 = sorted(glob.glob('images/*.tif'))
     images2 = sorted(glob.glob('reconstruction/*.png'))
 
     images1.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0].split('_')[-1]))
@@ -60,7 +60,9 @@ def main(args):
     ret2, K2, dist_coeffs2, rvecs2, tvecs2 = cv2.calibrateCamera(obj_points, img_points2, gray2.shape[::-1], None, None)
 
     # remap image 1 to image 2 using homography
-    H = cv2.findHomography(img_points1[0], img_points2[0])[0]
+    all_corners1 = np.concatenate(img_points1, axis=0)
+    all_corners2 = np.concatenate(img_points2, axis=0)
+    H, status = cv2.findHomography(all_corners1, all_corners2, cv2.RANSAC)
 
     # Save the calibration parameters
     os.makedirs('calibration', exist_ok=True)
@@ -69,7 +71,9 @@ def main(args):
     images2 = sorted(glob.glob('reconstruction/events/*.png'))
     images2.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0].split('_')[-1]))
 
-    for i1, i2 in zip(images1[:args.num_samples], images2[:args.num_samples]):
+    max_samples = min(len(images1), len(images2))
+
+    for i1, i2 in zip(images1[:max_samples], images2[:max_samples]):
         image_in = cv2.imread(str(i1))
         image_in = cv2.resize(image_in, (1280, 720))
 
@@ -90,7 +94,7 @@ def main(args):
         # add on image_out the image_base with a transparency of 0.5
         cv2.addWeighted(image_out, 1, image_base, 0.5, 0, image_out)
         cv2.imshow('Mapped Image and Base Image with Transparency', image_out)
-        cv2.waitKey(100)
+        cv2.waitKey(10)
 
     cv2.destroyAllWindows()
 

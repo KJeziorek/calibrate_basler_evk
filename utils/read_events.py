@@ -10,6 +10,7 @@ def read_events(file_path):
         print("Starting to read triggers from file...")
         file_trg = f['EXT_TRIGGER']
         mask = np.asarray(file_trg['events']['p']) > 0
+        print('Number of triggers: {}'.format(np.sum(mask)))
         for dset_str in ['p', 't']:
             triggers[dset_str] = np.asarray(file_trg['events']['{}'.format(dset_str)])[mask]
 

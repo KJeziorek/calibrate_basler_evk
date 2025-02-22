@@ -29,6 +29,7 @@ def parse_args():
     parser.add_argument('--compute_voxel_grid_on_cpu', dest='compute_voxel_grid_on_cpu', action='store_true')
     parser.set_defaults(compute_voxel_grid_on_cpu=False)
     parser.add_argument('--num_samples', default=50, type=int)
+    parser.add_argument('--skip_samples', default=0, type=int)
 
     set_inference_options(parser)
 
@@ -44,10 +45,10 @@ def main(args):
     events, triggers, id, ts = read_events(args.input_file)
 
     # Get events between the first and last trigger
-    t_start = np.searchsorted(ts, triggers['t'][0])
-    t_end = np.searchsorted(ts, triggers['t'][args.num_samples])
-    idx_start = id[t_start]
-    idx_end = id[t_end]
+    t_start = np.searchsorted(events['t'], triggers['t'][args.skip_samples])
+    t_end = np.searchsorted(events['t'], triggers['t'][args.num_samples+args.skip_samples])
+    idx_start = t_start
+    idx_end = t_end
 
     for key in events.keys():
         events[key] = events[key][idx_start:idx_end]
