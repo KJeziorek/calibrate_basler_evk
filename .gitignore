@@ -1,5 +1,6 @@
-events/*
-images/*
+data/*
+events/
+images/
 images1
 calibration/*
 reconstruction
@@ -12,6 +13,7 @@ images2
 Rondo1.zip
 Statycznie1.zip
 Sync-done-calibrated.zip
+calibration_test
 
 __pycache__/*
 *.pyc

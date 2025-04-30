@@ -36,9 +36,18 @@ def main(args):
         print(f"Error loading calibration parameters: {e}")
         return
 
+    os.makedirs('output', exist_ok=True)
+    os.makedirs('output/original_img', exist_ok=True)
+    os.makedirs('output/original_events', exist_ok=True)
+    os.makedirs('output/undistorted_img', exist_ok=True)
+    os.makedirs('output/undistorted_events', exist_ok=True)
+    os.makedirs('output/concat_img_ev', exist_ok=True)
+    os.makedirs('output/overlay_img_ev', exist_ok=True)
+    
+
     for img_path, timestamp in zip(image_files, triggers['t']):
-        t_start = np.searchsorted(events['t'], timestamp - args.duration * 1000)
-        t_end = np.searchsorted(events['t'], timestamp)
+        t_start = np.searchsorted(events['t'], timestamp)
+        t_end = np.searchsorted(events['t'], timestamp + args.duration * 1000)
         
         if t_start >= t_end:
             print("Skipping frame due to insufficient event data.")
@@ -47,6 +56,8 @@ def main(args):
         x, y, p = events['x'][t_start:t_end], events['y'][t_start:t_end], events['p'][t_start:t_end]
         
         img = cv2.imread(img_path)
+        cv2.imwrite(f'output/original_img/img_{timestamp}.tif', img)
+
         if img is None:
             print(f"Error reading image: {img_path}")
             continue
@@ -56,13 +67,26 @@ def main(args):
         
         ev_image[y[p == 1], x[p == 1]] = (0, 0, 255)
         ev_image[y[p == 0], x[p == 0]] = (255, 0, 0)
+
+        cv2.imwrite(f'output/original_events/ev_{timestamp}.tif', ev_image)
         
         img = cv2.undistort(img, K1, dist_coeffs1)
         ev_image = cv2.undistort(ev_image, K2, dist_coeffs2)
         img_warp = cv2.warpPerspective(img, H, (img.shape[1], img.shape[0]))
+
+        cv2.imwrite(f'output/undistorted_img/img_{timestamp}.tif', img_warp)
+        cv2.imwrite(f'output/undistorted_events/ev_{timestamp}.tif', ev_image)
         
         img_concat = cv2.hconcat([img_warp, ev_image])
         cv2.imshow('Mapped Image and Event Image', img_concat)
+
+        cv2.imwrite(f'output/concat_img_ev/img_ev_{timestamp}.tif', img_concat)
+        
+
+        cv2.addWeighted(ev_image, 1, img_warp, 0.5, 0, ev_image)
+        cv2.imshow('Mapped Image and Base Image with Transparency', ev_image)
+
+        cv2.imwrite(f'output/overlay_img_ev/img_ev_{timestamp}.tif', ev_image)
         
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
