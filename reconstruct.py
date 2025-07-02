@@ -21,7 +21,7 @@ def parse_args():
     parser.add_argument('-N', '--window_size', default=None, type=int,
                         help="Size of each event window, in number of events. Ignored if --fixed_duration=True")
     parser.add_argument('-T', '--window_duration', default=20, type=float,
-                        help="Duration of each event window, in milliseconds. Ignored if --fixed_duration=False")
+                        help="Duration of each event window, in milliseconds. Ignored if --fixed_duration=False. THIS MUST BE EQUAL TO SYNC DURATION!")
     parser.add_argument('--num_events_per_pixel', default=0.35, type=float,
                         help='in case N (window size) is not specified, it will be \
                               automatically computed as N = width * height * num_events_per_pixel')
